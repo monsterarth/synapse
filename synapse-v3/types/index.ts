@@ -81,23 +81,41 @@ export interface Property {
 }
 
 /**
+ * Representa um sabor ou variação de um item do catálogo (ex: Café).
+ */
+export interface CatalogItemFlavor {
+  id: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+}
+
+/**
  * Item do inventário que um hóspede pode solicitar (produtos e serviços).
  * Subcoleção: /properties/{propertyId}/catalog/{itemId}
  */
 export interface CatalogItem {
   id: string;
   name: string;
-  type: "loan" | "consumable" | "food" | "beverage";
-  category: string;
   description?: string;
-  price: number;
   imageUrl?: string;
   isActive: boolean;
-  stockControl: {
+  
+  // O tipo principal do item, que define os outros campos
+  type: "loan" | "consumable" | "food" | "beverage";
+  
+  category: string; // Categoria genérica (Ex: "Amenidades", "Bebidas Quentes")
+  price: number; // Preço principal (para consumíveis) ou de multa (para empréstimos)
+
+  // Campos específicos por tipo
+  stockControl?: { // Apenas para 'consumable'
     enabled: boolean;
     quantity: number;
   };
+  
+  flavors?: CatalogItemFlavor[]; // Apenas para 'food'/'beverage'
 }
+
 
 /**
  * Item do inventário que um hóspede pode agendar (recursos e serviços com horário).
@@ -228,6 +246,7 @@ export interface Stay {
   status: "active" | "upcoming" | "completed" | "cancelled";
   breakfastModalityOverride?: "delivery" | "salon";
   checkInForm?: any; // A ser definido conforme o formulário
+  numberOfGuests?: number; // Para cálculo de comensais
   // Para facilitar o acesso, podemos desnormalizar alguns dados
   guestName?: string;
   cabinName?: string;

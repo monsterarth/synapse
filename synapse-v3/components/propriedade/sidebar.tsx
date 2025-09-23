@@ -8,7 +8,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 import { cn } from "@/lib/utils"; // ShadCN helper
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, BedDouble, BookOpen, Settings, LogOut, Users, Coffee } from "lucide-react";
+import { LayoutDashboard, BedDouble, BookOpen, Settings, LogOut, Users, Coffee, Sparkles } from "lucide-react";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -16,6 +16,7 @@ const navLinks = [
   { href: "/hospedes", label: "Hóspedes", icon: Users },
   { href: "/cafe", label: "Café da Manhã", icon: Coffee },
   { href: "/catalogo", label: "Catálogo", icon: BookOpen },
+  { href: "/recursos", label: "Recursos", icon: Sparkles },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
