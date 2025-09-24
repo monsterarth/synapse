@@ -12,11 +12,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { DeleteItemAlert } from "./components/delete-item-alert";
 
-// Função para formatar moeda
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -24,7 +26,9 @@ const formatCurrency = (amount: number) => {
   }).format(amount);
 };
 
-export const columns: ColumnDef<CatalogItem>[] = [
+// CORREÇÃO APLICADA AQUI:
+// Garantimos que estamos exportando uma função chamada 'getColumns'.
+export const getColumns = (propertyId: string): ColumnDef<CatalogItem>[] => [
   {
     accessorKey: "imageUrl",
     header: "",
@@ -83,7 +87,10 @@ export const columns: ColumnDef<CatalogItem>[] = [
   },
   {
     id: "actions",
-    cell: () => {
+    cell: ({ row }) => {
+      const item = row.original;
+      const router = useRouter();
+
       return (
         <div className="text-right">
           <DropdownMenu>
@@ -95,10 +102,17 @@ export const columns: ColumnDef<CatalogItem>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem>Editar Item</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500">
-                Excluir Item
+              <DropdownMenuItem onClick={() => router.push(`/catalogo/${item.id}/edit`)}>
+                Editar Item
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DeleteItemAlert
+                propertyId={propertyId}
+                itemId={item.id}
+                itemName={item.name}
+              >
+                Excluir Item
+              </DeleteItemAlert>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

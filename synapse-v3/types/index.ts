@@ -117,6 +117,21 @@ export interface CatalogItem {
 }
 
 
+// --- NOVAS INTERFACES PARA O AGENDAMENTO ---
+export type DayOfWeek = 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat';
+
+export interface ScheduleSlot {
+  start: string; // "09:00"
+  end: string;   // "10:00"
+}
+
+export interface ScheduleRule {
+  id: string;
+  name: string; // "Horário Padrão", "Fim de Semana"
+  daysOfWeek: DayOfWeek[];
+  slots: ScheduleSlot[];
+}
+
 /**
  * Item do inventário que um hóspede pode agendar (recursos e serviços com horário).
  * Subcoleção: /properties/{propertyId}/resources/{resourceId}
@@ -130,6 +145,7 @@ export interface Resource {
   rules?: string;
   requiresConfirmation: boolean;
   isActive: boolean;
+  schedules?: ScheduleRule[]; // ADICIONADO CAMPO PARA HORÁRIOS
 }
 
 /**
@@ -246,8 +262,6 @@ export interface Stay {
   status: "active" | "upcoming" | "completed" | "cancelled";
   breakfastModalityOverride?: "delivery" | "salon";
   checkInForm?: any; // A ser definido conforme o formulário
-  numberOfGuests?: number; // Para cálculo de comensais
-  // Para facilitar o acesso, podemos desnormalizar alguns dados
   guestName?: string;
   cabinName?: string;
 }
@@ -264,7 +278,6 @@ export interface Order {
   observations?: string;
   status: "pending" | "confirmed" | "delivered" | "cancelled";
   createdAt: Timestamp | FieldValue;
-  // Desnormalização para facilitar a exibição
   itemName?: string;
 }
 
@@ -278,7 +291,6 @@ export interface Booking {
   scheduledFor: Timestamp;
   status: "pending" | "confirmed" | "completed" | "cancelled";
   createdAt: Timestamp | FieldValue;
-  // Desnormalização
   resourceName?: string;
 }
 

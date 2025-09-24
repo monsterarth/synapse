@@ -12,10 +12,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DeleteResourceAlert } from "./components/delete-resource-alert";
+import { useRouter } from "next/navigation";
 
-export const columns: ColumnDef<Resource>[] = [
+export const getColumns = (propertyId: string): ColumnDef<Resource>[] => [
   {
     accessorKey: "name",
     header: "Nome do Recurso",
@@ -55,7 +58,10 @@ export const columns: ColumnDef<Resource>[] = [
   },
   {
     id: "actions",
-    cell: () => {
+    cell: ({ row }) => {
+      const resource = row.original;
+      const router = useRouter();
+
       return (
         <div className="text-right">
           <DropdownMenu>
@@ -67,11 +73,20 @@ export const columns: ColumnDef<Resource>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem>Editar Recurso</DropdownMenuItem>
-              <DropdownMenuItem>Gerenciar Horários</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500">
-                Excluir Recurso
+              <DropdownMenuItem onClick={() => router.push(`/recursos/${resource.id}/edit`)}>
+                Editar Recurso
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push(`/recursos/${resource.id}/horarios`)}>
+                Gerenciar Horários
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DeleteResourceAlert
+                propertyId={propertyId}
+                resourceId={resource.id}
+                resourceName={resource.name}
+              >
+                Excluir Recurso
+              </DeleteResourceAlert>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
