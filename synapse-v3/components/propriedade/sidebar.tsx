@@ -8,17 +8,18 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, BedDouble, BookOpen, Settings, LogOut, Users, Coffee, Sparkles, Home } from "lucide-react";
+import { LayoutDashboard, BedDouble, BookOpen, Settings, LogOut, Users, Coffee, Sparkles, Home, FileText } from "lucide-react";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/hospedagens", label: "Hospedagens", icon: BedDouble },
   { href: "/hospedes", label: "Hóspedes", icon: Users },
   { href: "/cafe", label: "Café da Manhã", icon: Coffee },
-  // ADICIONE A LINHA ABAIXO:
   { href: "/cabanas", label: "Cabanas", icon: Home },
   { href: "/catalogo", label: "Catálogo", icon: BookOpen },
   { href: "/recursos", label: "Recursos", icon: Sparkles },
+  // ADICIONE A LINHA ABAIXO:
+  { href: "/conteudo", label: "Conteúdos", icon: FileText },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 

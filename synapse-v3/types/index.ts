@@ -157,14 +157,16 @@ export interface Content {
   title: string;
   type: "policy" | "guide" | "event" | "manual" | "procedure";
   category: string;
-  targetAudience: Array<"reception" | "guest" | "all">;
-  body: string; // Rich text ou markdown
+  // CORREÇÃO: Mantido como array e unificados os valores
+  targetAudience: Array<"guest" | "staff" | "all">; 
+  body: string;
   isPublished: boolean;
   eventDetails?: {
     start: Timestamp;
     end: Timestamp;
     location: string;
   };
+  createdAt?: Timestamp | FieldValue;
 }
 
 /**
