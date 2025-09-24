@@ -4,7 +4,7 @@
 
 import { adminDb } from "@/lib/firebase/server";
 import { Order, Stay } from "@/types";
-import { Timestamp } from "firebase-admin/firestore";
+import { Timestamp, DocumentData, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 // Interface para o tipo de dado que a página realmente precisa
 export interface BreakfastOrderInfo extends Order {
@@ -13,13 +13,13 @@ export interface BreakfastOrderInfo extends Order {
 }
 
 // Helper para converter Timestamps
-const transformOrderData = (doc: any): any => {
+const transformOrderData = (doc: QueryDocumentSnapshot<DocumentData>): Order => {
     const data = doc.data();
     return {
       id: doc.id,
       ...data,
       createdAt: data.createdAt?.toDate().toISOString(),
-    };
+    } as Order;
   };
 
 export async function getTodaysBreakfastOrders(propertyId: string): Promise<BreakfastOrderInfo[]> {
@@ -62,10 +62,9 @@ export async function getTodaysBreakfastOrders(propertyId: string): Promise<Brea
             continue;
         }
 
-        const stayOrders: BreakfastOrderInfo[] = [];
         // Usaremos Promise.all para enriquecer os pedidos com os nomes dos itens
         const ordersPromises = ordersSnapshot.docs.map(async (orderDoc) => {
-            const orderData = transformOrderData(orderDoc) as Order;
+            const orderData = transformOrderData(orderDoc);
 
             // Buscando o nome do item no catálogo
             if(orderData.catalogItemRef) {

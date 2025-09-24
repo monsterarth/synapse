@@ -6,11 +6,12 @@ import { adminDb } from "@/lib/firebase/server";
 import { CatalogItem } from "@/types";
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
+import { DocumentData, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
-// Helper para serializar dados do Firestore (sem alteração)
-const transformData = (doc: any): any => {
+// Helper para serializar dados do Firestore
+const transformData = (doc: QueryDocumentSnapshot<DocumentData>): CatalogItem => {
     const data = doc.data();
-    return { id: doc.id, ...data };
+    return { id: doc.id, ...data } as CatalogItem;
 };
 
 // createCatalogItem (sem alteração)
@@ -39,7 +40,7 @@ export async function getCatalogItems(propertyId: string, type?: CatalogItem['ty
         }
         const snapshot = await query.orderBy("name").get();
         if (snapshot.empty) return [];
-        return snapshot.docs.map(transformData) as CatalogItem[];
+        return snapshot.docs.map(transformData);
     } catch (error) {
         console.error("Error fetching catalog items:", error);
         return [];
@@ -59,7 +60,8 @@ export async function getCatalogItemById(propertyId: string, itemId: string): Pr
         if (!doc.exists) {
             notFound(); // Redireciona para 404 se o item não for encontrado
         }
-        return transformData(doc) as CatalogItem;
+        // Aqui usamos um cast direto pois já validamos a existência.
+        return { id: doc.id, ...doc.data() } as CatalogItem;
     } catch (error) {
         console.error("Error fetching catalog item by ID:", error);
         return null;

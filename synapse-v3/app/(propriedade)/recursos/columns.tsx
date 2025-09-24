@@ -55,7 +55,7 @@ export const columns: ColumnDef<Resource>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <div className="text-right">
           <DropdownMenu>

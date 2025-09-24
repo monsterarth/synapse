@@ -4,9 +4,10 @@
 
 import { adminDb } from "@/lib/firebase/server";
 import { Guest } from "@/types";
+import { DocumentData, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 // Helper para converter Timestamps do Firestore para strings JSON-compatíveis
-const transformGuestData = (doc: any): any => {
+const transformGuestData = (doc: QueryDocumentSnapshot<DocumentData>): Guest => {
   const data = doc.data();
   // Transforma os timestamps aninhados, se existirem
   const identity = data.identity ? {
@@ -24,7 +25,7 @@ const transformGuestData = (doc: any): any => {
     ...data,
     identity,
     history,
-  };
+  } as Guest;
 };
 
 export async function getGuestsForProperty(propertyId: string): Promise<Guest[]> {
@@ -42,7 +43,7 @@ export async function getGuestsForProperty(propertyId: string): Promise<Guest[]>
     }
 
     const guests = snapshot.docs.map(transformGuestData);
-    return guests as Guest[];
+    return guests;
 
   } catch (error) {
     console.error("Error fetching guests: ", error);

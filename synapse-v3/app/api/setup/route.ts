@@ -53,8 +53,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, message: `Property '${propertyId}' created successfully.` }, { status: 201 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("SETUP_ROUTE_ERROR:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json({ error: "Internal Server Error", details: errorMessage }, { status: 500 });
   }
 }

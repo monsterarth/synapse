@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/types/app/(propriedade)/catalogo/[itemId]/edit/page.tsx", ".next/types/app/(propriedade)/hospedes/page.tsx", ".next/types/app/(propriedade)/hospedagens/page.tsx", ".next/types/app/(propriedade)/dashboard/page.tsx", ".next/types/app/(propriedade)/catalogo/page.tsx", "next.config.mjs"],
   "exclude": ["node_modules"]
 }

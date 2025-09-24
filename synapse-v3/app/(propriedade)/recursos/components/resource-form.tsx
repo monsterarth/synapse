@@ -20,7 +20,6 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 
-// Schema com a solução de tratar números como strings e usar .refine()
 const resourceFormSchema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
   type: z.enum(["amenity", "service"]),
@@ -31,8 +30,10 @@ const resourceFormSchema = z.object({
     message: "Duração deve ser um número inteiro de no mínimo 15.",
   }),
   rules: z.string().optional(),
-  requiresConfirmation: z.boolean().default(true),
-  isActive: z.boolean().default(true),
+  // CORREÇÃO: Removido .default()
+  requiresConfirmation: z.boolean(),
+  // CORREÇÃO: Removido .default()
+  isActive: z.boolean(),
 });
 
 type ResourceFormValues = z.infer<typeof resourceFormSchema>;
@@ -52,10 +53,10 @@ export function ResourceForm({ propertyId, initialData }: ResourceFormProps) {
     defaultValues: {
       name: initialData?.name || "",
       type: initialData?.type || "amenity",
-      // Valores iniciais convertidos para string
       capacity: String(initialData?.capacity || 1),
       bookingDuration: String(initialData?.bookingDuration || 60),
       rules: initialData?.rules || "",
+      // O valor padrão é garantido aqui
       requiresConfirmation: initialData?.requiresConfirmation ?? true,
       isActive: initialData?.isActive ?? true,
     },
@@ -64,7 +65,6 @@ export function ResourceForm({ propertyId, initialData }: ResourceFormProps) {
   const onSubmit = async (values: ResourceFormValues) => {
     setIsLoading(true);
     try {
-      // Conversão de string para number antes de enviar para o backend
       const dataToSave = {
         ...values,
         capacity: parseInt(values.capacity, 10),

@@ -20,8 +20,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 
-// SOLUÇÃO FINAL: Schema inspirado no projeto antigo.
-// Campos numéricos são tratados como strings e validados com .refine().
 const formSchema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
   type: z.enum(["loan", "consumable", "food", "beverage"]),
@@ -30,8 +28,7 @@ const formSchema = z.object({
   price: z.string().refine(val => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {
     message: "Preço deve ser um número válido e não negativo.",
   }),
-  // CORREÇÃO APLICADA: Removido o .optional() para evitar tipo 'boolean | undefined'
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(), // CORREÇÃO: Removido o .default(true) daqui
   stockControl: z.object({
     enabled: z.boolean(),
     quantity: z.string().refine(val => /^\d+$/.test(val), {
@@ -64,9 +61,8 @@ export function ItemForm({ propertyId, initialData }: ItemFormProps) {
       type: initialData?.type || "loan",
       category: initialData?.category || "",
       description: initialData?.description || "",
-      // Valores iniciais também são convertidos para string.
       price: String(initialData?.price || 0),
-      isActive: initialData?.isActive ?? true,
+      isActive: initialData?.isActive ?? true, // O valor padrão é garantido aqui
       stockControl: {
         enabled: initialData?.stockControl?.enabled || false,
         quantity: String(initialData?.stockControl?.quantity || 0),
@@ -85,7 +81,6 @@ export function ItemForm({ propertyId, initialData }: ItemFormProps) {
   const onSubmit = async (values: ItemFormValues) => {
     setIsLoading(true);
     try {
-      // Conversão de string para number acontece aqui, antes de enviar.
       const dataToSave = {
           ...values,
           price: parseFloat(values.price),

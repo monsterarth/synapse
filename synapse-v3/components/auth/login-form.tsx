@@ -5,6 +5,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 import { auth } from "@/lib/firebase/client";
 
 // Importando componentes do ShadCN/UI
@@ -38,11 +39,13 @@ export function LoginForm() {
       await signInWithEmailAndPassword(auth, email, password);
       // O redirecionamento será para o dashboard da propriedade
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Mapeia erros do Firebase para mensagens amigáveis
       let errorMessage = "Ocorreu um erro inesperado. Tente novamente.";
-      if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found") {
-        errorMessage = "E-mail ou senha inválidos. Verifique suas credenciais.";
+      if (err instanceof FirebaseError) {
+        if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found") {
+          errorMessage = "E-mail ou senha inválidos. Verifique suas credenciais.";
+        }
       }
       setError(errorMessage);
     } finally {

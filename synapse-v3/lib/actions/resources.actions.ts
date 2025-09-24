@@ -5,11 +5,12 @@
 import { adminDb } from "@/lib/firebase/server";
 import { Resource } from "@/types";
 import { revalidatePath } from "next/cache";
+import { DocumentData, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
-// Helper para serializar dados do Firestore (sem alteração)
-const transformData = (doc: any): any => {
+// Helper para serializar dados do Firestore
+const transformData = (doc: QueryDocumentSnapshot<DocumentData>): Resource => {
     const data = doc.data();
-    return { id: doc.id, ...data };
+    return { id: doc.id, ...data } as Resource;
 };
 
 // getResources (sem alteração)
@@ -22,7 +23,7 @@ export async function getResources(propertyId: string): Promise<Resource[]> {
         const resourcesRef = adminDb.collection(`properties/${propertyId}/resources`);
         const snapshot = await resourcesRef.orderBy("name").get();
         if (snapshot.empty) return [];
-        return snapshot.docs.map(transformData) as Resource[];
+        return snapshot.docs.map(transformData);
     } catch (error) {
         console.error("Error fetching resources: ", error);
         return [];
