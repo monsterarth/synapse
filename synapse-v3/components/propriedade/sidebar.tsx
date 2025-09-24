@@ -6,15 +6,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
-import { cn } from "@/lib/utils"; // ShadCN helper
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, BedDouble, BookOpen, Settings, LogOut, Users, Coffee, Sparkles } from "lucide-react";
+import { LayoutDashboard, BedDouble, BookOpen, Settings, LogOut, Users, Coffee, Sparkles, Home } from "lucide-react";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/hospedagens", label: "Hospedagens", icon: BedDouble },
   { href: "/hospedes", label: "Hóspedes", icon: Users },
   { href: "/cafe", label: "Café da Manhã", icon: Coffee },
+  // ADICIONE A LINHA ABAIXO:
+  { href: "/cabanas", label: "Cabanas", icon: Home },
   { href: "/catalogo", label: "Catálogo", icon: BookOpen },
   { href: "/recursos", label: "Recursos", icon: Sparkles },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
@@ -32,7 +34,6 @@ export function Sidebar() {
   return (
     <aside className="hidden w-64 flex-col border-r bg-gray-100/40 p-4 dark:bg-gray-800/40 md:flex">
       <div className="mb-8 flex items-center gap-2">
-        {/* Você pode substituir isso pela logo da Pousada no futuro */}
         <BedDouble className="h-8 w-8 text-primary" />
         <h1 className="text-xl font-bold">Synapse Pousada</h1>
       </div>
